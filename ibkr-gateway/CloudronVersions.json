@@ -1,4 +1,41 @@
 {
     "stable": true,
-    "versions": {}
+    "versions": {
+        "0.1.0": {
+            "manifest": {
+                "manifestVersion": 2,
+                "id": "com.finbook.ibkr-gateway",
+                "title": "IBKR Gateway",
+                "version": "0.1.0",
+                "httpPort": 3000,
+                "healthCheckPath": "/healthz",
+                "memoryLimit": 2147483648,
+                "addons": {
+                    "localstorage": {},
+                    "proxyAuth": {}
+                },
+                "tagline": "IB Gateway mit IBC für mpm",
+                "website": "https://mpm.cloudron.van-rickelen.com",
+                "iconUrl": "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/ibkr-gateway/icon.png",
+                "packagerName": "Boris van Rickelen",
+                "packagerUrl": "https://mpm.cloudron.van-rickelen.com",
+                "minBoxVersion": "9.1.0",
+                "description": "IB Gateway mit IBC als eigene App neben mpm: hält die angemeldete IBKR-Sitzung, über die mpm per TWS-API handelt. Zugangsdaten und Modus setzt der Betreiber in der App-Umgebung; das Image enthält keine.\n",
+                "changelog": "* Erste Version im Katalog: IB Gateway 10.50.1f mit IBC, Paper-Modus, Health-Endpunkt.\n",
+                "postInstallMessage": "Der erste Start endet absichtlich ohne laufende App: ohne Zugangsdaten und Modus bricht `start.sh` ab.\n\nZugangsdaten und Modus setzen (Cloudron-CLI, `env set` startet die App neu):\n\n```\ncloudron env set --app ibkr-gateway TWS_USERID=<Paper-Benutzer> TWS_PASSWORD=<Paper-Passwort> TRADING_MODE=paper\n```\n\nDanach die Kind-App auf das Gateway zeigen (App-ID der Gateway-App aus `cloudron list`, Spalte `Id`):\n\n```\ncloudron env set --app mpm MPM_IBKR_HOST=<App-ID der Gateway-App>\n```\n",
+                "tags": [
+                    "finance",
+                    "trading"
+                ],
+                "mediaLinks": [
+                    "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/ibkr-gateway/icon.png"
+                ],
+                "icon": "file://icon.png",
+                "dockerImage": "container.cloudron.van-rickelen.com/ibkr-gateway:20261019-125430-50383f990"
+            },
+            "creationDate": "Wed, 28 Oct 2026 12:59:38 GMT",
+            "ts": "Wed, 28 Oct 2026 12:59:38 GMT",
+            "publishState": "published"
+        }
+    }
 }
