@@ -62,10 +62,10 @@
                     "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/mpm-kind/icon.png"
                 ],
                 "icon": "file://icon.png",
-                "dockerImage": "docker.van-rickelen.com/mpm-kind:0.1.18"
+                "dockerImage": "container.cloudron.van-rickelen.com/mpm-kind:0.1.18"
             },
             "creationDate": "Wed, 28 Oct 2026 11:38:09 GMT",
-            "ts": "Wed, 28 Oct 2026 11:38:09 GMT",
+            "ts": "Wed, 28 Oct 2026 12:19:39 GMT",
             "publishState": "published"
         }
     }
