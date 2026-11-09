@@ -190,6 +190,129 @@
             "creationDate": "Sat, 31 Oct 2026 12:54:12 GMT",
             "ts": "Sat, 31 Oct 2026 12:54:12 GMT",
             "publishState": "published"
+        },
+        "0.1.40": {
+            "manifest": {
+                "manifestVersion": 2,
+                "id": "com.finbook.mpm-kind",
+                "title": "MPM Kind",
+                "version": "0.1.40",
+                "httpPort": 8000,
+                "healthCheckPath": "/healthz",
+                "memoryLimit": 1073741824,
+                "addons": {
+                    "postgresql": {},
+                    "localstorage": {},
+                    "proxyAuth": {},
+                    "scheduler": {
+                        "mutter_pull_off_hours": {
+                            "schedule": "*/5 0-13,21-23 * * *",
+                            "command": "timeout 30s mpm run dashboard_diagnose; mpm run gateway_mutter_pull"
+                        },
+                        "mutter_pull_weekend_day": {
+                            "schedule": "*/5 14-20 * * 0,6",
+                            "command": "timeout 30s mpm run dashboard_diagnose; mpm run gateway_mutter_pull"
+                        },
+                        "mutter_pull_session": {
+                            "schedule": "* 14-20 * * 1-5",
+                            "command": "timeout 30s mpm run dashboard_diagnose; mpm run gateway_mutter_pull"
+                        },
+                        "heartbeat_alpaca_live_off_hours": {
+                            "schedule": "*/5 0-13,21-23 * * *",
+                            "command": "sleep 30 && mpm heartbeat alpaca_live"
+                        },
+                        "heartbeat_alpaca_live_weekend_day": {
+                            "schedule": "*/5 14-20 * * 0,6",
+                            "command": "sleep 30 && mpm heartbeat alpaca_live"
+                        },
+                        "heartbeat_alpaca_live_session": {
+                            "schedule": "* 14-20 * * 1-5",
+                            "command": "sleep 30 && mpm heartbeat alpaca_live"
+                        },
+                        "heartbeat_alpaca_paper_off_hours": {
+                            "schedule": "*/5 0-13,21-23 * * *",
+                            "command": "sleep 30 && mpm heartbeat alpaca_paper"
+                        },
+                        "heartbeat_alpaca_paper_weekend_day": {
+                            "schedule": "*/5 14-20 * * 0,6",
+                            "command": "sleep 30 && mpm heartbeat alpaca_paper"
+                        },
+                        "heartbeat_alpaca_paper_session": {
+                            "schedule": "* 14-20 * * 1-5",
+                            "command": "sleep 30 && mpm heartbeat alpaca_paper"
+                        },
+                        "heartbeat_hyperliquid_live_off_hours": {
+                            "schedule": "*/5 0-13,21-23 * * *",
+                            "command": "sleep 30 && mpm heartbeat hyperliquid_live"
+                        },
+                        "heartbeat_hyperliquid_live_weekend_day": {
+                            "schedule": "*/5 14-20 * * 0,6",
+                            "command": "sleep 30 && mpm heartbeat hyperliquid_live"
+                        },
+                        "heartbeat_hyperliquid_live_session": {
+                            "schedule": "* 14-20 * * 1-5",
+                            "command": "sleep 30 && mpm heartbeat hyperliquid_live"
+                        },
+                        "heartbeat_hyperliquid_testnet_off_hours": {
+                            "schedule": "*/5 0-13,21-23 * * *",
+                            "command": "sleep 30 && mpm heartbeat hyperliquid_testnet"
+                        },
+                        "heartbeat_hyperliquid_testnet_weekend_day": {
+                            "schedule": "*/5 14-20 * * 0,6",
+                            "command": "sleep 30 && mpm heartbeat hyperliquid_testnet"
+                        },
+                        "heartbeat_hyperliquid_testnet_session": {
+                            "schedule": "* 14-20 * * 1-5",
+                            "command": "sleep 30 && mpm heartbeat hyperliquid_testnet"
+                        },
+                        "heartbeat_ibkr_live_off_hours": {
+                            "schedule": "*/5 0-13,21-23 * * *",
+                            "command": "sleep 30 && mpm heartbeat ibkr_live"
+                        },
+                        "heartbeat_ibkr_live_weekend_day": {
+                            "schedule": "*/5 14-20 * * 0,6",
+                            "command": "sleep 30 && mpm heartbeat ibkr_live"
+                        },
+                        "heartbeat_ibkr_live_session": {
+                            "schedule": "* 14-20 * * 1-5",
+                            "command": "sleep 30 && mpm heartbeat ibkr_live"
+                        },
+                        "heartbeat_ibkr_paper_off_hours": {
+                            "schedule": "*/5 0-13,21-23 * * *",
+                            "command": "sleep 30 && mpm heartbeat ibkr_paper"
+                        },
+                        "heartbeat_ibkr_paper_weekend_day": {
+                            "schedule": "*/5 14-20 * * 0,6",
+                            "command": "sleep 30 && mpm heartbeat ibkr_paper"
+                        },
+                        "heartbeat_ibkr_paper_session": {
+                            "schedule": "* 14-20 * * 1-5",
+                            "command": "sleep 30 && mpm heartbeat ibkr_paper"
+                        }
+                    }
+                },
+                "tagline": "Kind von mpm",
+                "website": "https://mpm.cloudron.van-rickelen.com",
+                "iconUrl": "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/mpm-kind/icon.png",
+                "packagerName": "Boris van Rickelen",
+                "packagerUrl": "https://mpm.cloudron.van-rickelen.com",
+                "minBoxVersion": "9.1.0",
+                "description": "mpm in der Rolle Kind: zieht Freigaben und Zielgewichte von der Mutter und handelt das Broker-Konto des Betreibers.\n",
+                "changelog": "* Erste Futures-Strategie Rebalance Pressure (AD-27/AD-29, Research-Verdikt 31.10.): Pakete `rebalance_pressure` (Signal VTI/IEF, Beine MES/MWN, Monatsende-Bein und Monatsstart-Paar, Zielschwankung 20 %/J bei voller Größe) und `rebalance_pressure_roll` (Roll-Stufe nach Story 15-3). VTI neu in der Alpaca-Tickerliste.\n* Story 15-6: beide Steps hängen hinten an der Nachmittagskette `chain_strategies` (Ende ≤ 20:38 UTC, vor dem Blend ibkr_paper 20:48); Quelle `mpm` (Ketten-Reihe) im Maschinenraum; Runbook §28 Rebalance Pressure auf IBKR Paper (Kette, Promotionsfolge eines `_roll`-Pakets, Roll-Tag und Spiegel, Release-Gate); Runbook §20.4 ist jetzt der Rückabruf. Promotion auf ibkr_paper erst nach dem Rückabruf (§28.2 Vorbedingung: ≥ 251 Kettentage je Wurzel).\n* Fix: `mpm config kind --freigabe` lehnt die Roll-Stufe einer Einzelstrategie ab (AD-23; Boris 08.11.).\n* Enthält 0.1.39 (Rückabruf ausgelaufener Kontrakte, Story 15-7). Keine Migration. Kind: wie Mutter (keine Kind-Änderung).\n",
+                "postInstallMessage": "Der erste Start ist absichtlich rot: das Kind ist noch nicht eingerichtet. Das Dashboard zeigt den Pull rot („nicht eingerichtet\"), die Herzschläge handeln nichts.\n\nEinrichten im Dashboard dieser App, ohne Neustart:\n\n1. Seite `/einrichtung`: die gehandelten Konten anhaken (höchstens ein IBKR-Konto), als Mutter-Adresse `https://mpm.cloudron.van-rickelen.com` eintragen, „Speichern\".\n2. Seite `/secrets`: `MPM_MUTTER_TOKEN` mit dem Token von Boris und die Broker-Keys eintragen.\n\nDer nächste Pull zieht dann von der Mutter. Ein IBKR-Konto braucht zusätzlich die Gateway-App; siehe deren Nachricht nach der Installation.\n",
+                "tags": [
+                    "finance",
+                    "trading"
+                ],
+                "mediaLinks": [
+                    "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/mpm-kind/icon.png"
+                ],
+                "icon": "file://icon.png",
+                "dockerImage": "container.cloudron.van-rickelen.com/mpm-kind:0.1.40"
+            },
+            "creationDate": "Mon, 09 Nov 2026 15:02:48 GMT",
+            "ts": "Mon, 09 Nov 2026 15:02:48 GMT",
+            "publishState": "published"
         }
     }
 }
