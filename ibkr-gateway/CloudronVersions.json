@@ -108,6 +108,44 @@
             "creationDate": "Mon, 09 Nov 2026 09:11:56 GMT",
             "ts": "Mon, 09 Nov 2026 09:11:56 GMT",
             "publishState": "published"
+        },
+        "0.2.0": {
+            "manifest": {
+                "manifestVersion": 2,
+                "id": "com.finbook.ibkr-gateway",
+                "title": "IBKR Gateway",
+                "version": "0.2.0",
+                "httpPort": 3000,
+                "healthCheckPath": "/healthz",
+                "memoryLimit": 2147483648,
+                "addons": {
+                    "localstorage": {},
+                    "proxyAuth": {
+                        "path": "!regexp:^/(status|healthz)$"
+                    }
+                },
+                "tagline": "IB Gateway mit IBC für mpm",
+                "website": "https://mpm.cloudron.van-rickelen.com",
+                "iconUrl": "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/ibkr-gateway/icon.png",
+                "packagerName": "Boris van Rickelen",
+                "packagerUrl": "https://mpm.cloudron.van-rickelen.com",
+                "minBoxVersion": "9.1.0",
+                "description": "IB Gateway mit IBC als eigene App neben mpm: ein Wärter hält die angemeldete IBKR-Sitzung, über die mpm per TWS-API handelt, und zeigt ihren Zustand. Zugangsdaten und Einstellungen trägt der Betreiber auf der Seite der App ein; das Image enthält keine.\n",
+                "changelog": "* Wärter als Elternprozess: Einstellungsseite auf Port 3000 (Benutzer, Passwort, Modus, Read-only-API, Tagesneustart, voller Login sonntags), gespeichert auf `/app/data`; die Einstellungen kommen nicht mehr aus der App-Umgebung.\n* Der Wärter rendert IBCs `config.ini` (Command-Server auf 127.0.0.1:7462) und startet das Gateway, sobald die Einstellungen vollständig sind; Modus `live` startet nie von selbst, auch nicht nach einem Neustart der App, sondern erst nach einer Speicherung oder nach „jetzt anmelden\".\n* `/healthz` meldet „Wärter lebt\" (200), nicht mehr den API-Socket; `/status` und `/healthz` liegen außerhalb der Cloudron-Anmeldung.\n* Vorgaben: Tagesneustart 07:00 UTC, voller Login sonntags 10:00 UTC, Read-only-API aus.\n* Jede Speicherung startet das Gateway voll neu: `STOP` an IBCs Command-Server, SIGTERM an die Prozessgruppe des alten Baums, dann ein neuer Start mit den gespeicherten Einstellungen — nie zwei Bäume.\n* Einstellung „Gerät für den zweiten Faktor\" (IBCs `SecondFactorDevice`, z. B. `IB Key`), Vorgabe leer für ein Konto mit einem Gerät.\n* `/status` (immer 200, JSON `zustand`, `modus`, `seit`, `text`): der Wärter erkennt den Zustand der Sitzung aus IBCs Ausgabe, dem Gateway-Log `launcher.log` ab dem Start des Baums und dem API-Port des eingestellten Modus; Zustände `keine_einstellungen`, `startet`, `handelsbereit`, `server_getrennt`, `haengt`, `zweiter_faktor_noetig`, `login_abgelehnt`.\n* API-Probe des Wärters (`probe.py`, eigene venv mit `ib_async` 2.1.0, Client-ID 90): fragt alle 30 s die Kontowerte ab, frühestens 15 s nach dem Login; Antwort binnen 5 s = `handelsbereit`, sonst `server_getrennt`. Ohne `handelsbereit` wird `startet` nach 10 Minuten zu `haengt`.\n* Die Ausgabe von `run.sh` läuft über den Wärter und steht unverändert im App-Log.\n* Die Seite zeigt oben den Zustand wie `/status` (`zustand`, Text, Modus, seit) und unten einen Log-Ausschnitt: je die jüngsten 100 Zeilen aus IBCs Ausgabe und aus `launcher.log` seit dem Start des Gateways; Benutzer, Passwort, Sitzungs-Token und Log-Schlüssel des Gateways maskiert.\n* Watchdog des Wärters: auf anhaltendem `server_getrennt` (120 s) Stufe 1 `RECONNECTACCOUNT`/`RECONNECTDATA`, auf anhaltendem `haengt` (60 s) Stufe 2 `RESTART` oder — bei verworfenem Token oder beendetem Prozess — Stufe 3 voller Neustart (Modus `paper` jederzeit, Modus `live` nur im Login-Fenster); hält der Zustand an, steigt er eine Stufe; Stufe 2 in beiden Modi und Stufe 3 im Modus `paper` zusammen höchstens 3-mal je UTC-Tag; Tagesbudget und Verlauf der jüngsten 50 Eingriffe in `/app/data/watchdog.json` und auf der Seite.\n* `login_abgelehnt` überdauert den Neustart des Containers (Marke `/app/data/login_abgelehnt`): kein neuer Login, bis eine gültige Speicherung die Marke löscht; stirbt ein Thread des Wärters an einer Ausnahme, endet der Wärter sofort mit Exit 1 (als PID 1 nimmt er den Container samt Gateway mit).\n* Knopf „jetzt anmelden\" auf der Seite: voller Neustart mit den gespeicherten Einstellungen in jedem Modus und Zustand, ohne Tagesbudget; nicht angeboten und wirkungslos nach einem abgelehnten Login; steht im Watchdog-Verlauf (Stufe `Knopf`); die Texte bei `haengt` und bei der von IBKR beendeten Anfrage des zweiten Faktors nennen ihn statt „Speichern\".\n* Login-Fenster im Modus `live` (sonntags ab der Uhrzeit des vollen Logins und nach „jetzt anmelden\", je 30 Minuten): der Watchdog macht dort den vollen Neustart (Stufe 3) ohne Tagesbudget — bei verworfenem Token, nach IBKRs Ende einer unbestätigten Anfrage des zweiten Faktors sofort und nach 10 Minuten Warten auf die Anfrage; die Texte nennen keine feste Ablaufzeit mehr.\n* Einrichtung ohne Cloudron-CLI: Einstellungen auf der Seite der App; die Zeile „Adresse für mpm\" geht als `MPM_IBKR_HOST` auf die Seite „Inbetriebnahme\" von mpm. Update von einer Version vor 0.2.0: das Gateway startet erst nach dem Speichern von Benutzer und Passwort auf der Seite.\n",
+                "postInstallMessage": "Die App läuft, das Gateway noch nicht: die Seite dieser App (hinter der Cloudron-Anmeldung) zeigt den Zustand `keine_einstellungen`. Ein Gateway startet erst mit „Speichern\".\n\nEinrichten auf der Seite dieser App:\n\n1. Benutzer, Passwort und Modus (`paper` oder `live`) eintragen. Read-only-API, Tagesneustart (UTC), Voller Login sonntags (UTC) und Gerät für den zweiten Faktor haben Vorgaben; das Gerät bleibt leer, wenn das Konto nur ein Gerät hat. Dann „Speichern\".\n2. Modus `paper` startet mit dem Speichern. Modus `live` verlangt beim Login den zweiten Faktor: die Anfrage am Gerät bestätigen.\n3. Warten, bis der Zustand oben auf der Seite `handelsbereit` zeigt.\n4. Den Wert der Zeile „Adresse für mpm\" in mpm auf der Seite „Inbetriebnahme\" beim IBKR-Konto als `MPM_IBKR_HOST` eintragen und speichern.\n",
+                "tags": [
+                    "finance",
+                    "trading"
+                ],
+                "mediaLinks": [
+                    "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/ibkr-gateway/icon.png"
+                ],
+                "icon": "file://icon.png",
+                "dockerImage": "container.cloudron.van-rickelen.com/ibkr-gateway:0.2.0"
+            },
+            "creationDate": "Mon, 16 Nov 2026 11:59:32 GMT",
+            "ts": "Mon, 16 Nov 2026 11:59:32 GMT",
+            "publishState": "published"
         }
     }
 }
