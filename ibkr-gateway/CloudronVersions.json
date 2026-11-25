@@ -146,6 +146,44 @@
             "creationDate": "Mon, 16 Nov 2026 11:59:32 GMT",
             "ts": "Mon, 16 Nov 2026 11:59:32 GMT",
             "publishState": "published"
+        },
+        "0.2.1": {
+            "manifest": {
+                "manifestVersion": 2,
+                "id": "com.finbook.ibkr-gateway",
+                "title": "IBKR Gateway",
+                "version": "0.2.1",
+                "httpPort": 3000,
+                "healthCheckPath": "/healthz",
+                "memoryLimit": 2147483648,
+                "addons": {
+                    "localstorage": {},
+                    "proxyAuth": {
+                        "path": "!regexp:^/(status|healthz)$"
+                    }
+                },
+                "tagline": "IB Gateway mit IBC für mpm",
+                "website": "https://mpm.cloudron.van-rickelen.com",
+                "iconUrl": "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/ibkr-gateway/icon.png",
+                "packagerName": "Boris van Rickelen",
+                "packagerUrl": "https://mpm.cloudron.van-rickelen.com",
+                "minBoxVersion": "9.1.0",
+                "description": "IB Gateway mit IBC als eigene App neben mpm: ein Wärter hält die angemeldete IBKR-Sitzung, über die mpm per TWS-API handelt, und zeigt ihren Zustand. Zugangsdaten und Einstellungen trägt der Betreiber auf der Seite der App ein; das Image enthält keine.\n",
+                "changelog": "* Neuer Zustand `orders_stumm`: die API-Probe des Wärters fragt außerhalb von IBCs Verbindungsfenster zusätzlich die abgeschlossenen Orders ab (Zeitlimit 10 s); antworten die Kontowerte, die Orders aber nicht, meldet `/status` `orders_stumm`.\n* Watchdog: auf anhaltendem `orders_stumm` (120 s) Stufe 1 `RECONNECTACCOUNT`/`RECONNECTDATA`; hält der Zustand an, steigt er wie bei `server_getrennt` (600 s, dann Stufe 2).\n",
+                "postInstallMessage": "Die App läuft, das Gateway noch nicht: die Seite dieser App (hinter der Cloudron-Anmeldung) zeigt den Zustand `keine_einstellungen`. Ein Gateway startet erst mit „Speichern\".\n\nEinrichten auf der Seite dieser App:\n\n1. Benutzer, Passwort und Modus (`paper` oder `live`) eintragen. Read-only-API, Tagesneustart (UTC), Voller Login sonntags (UTC) und Gerät für den zweiten Faktor haben Vorgaben; das Gerät bleibt leer, wenn das Konto nur ein Gerät hat. Dann „Speichern\".\n2. Modus `paper` startet mit dem Speichern. Modus `live` verlangt beim Login den zweiten Faktor: die Anfrage am Gerät bestätigen.\n3. Warten, bis der Zustand oben auf der Seite `handelsbereit` zeigt.\n4. Den Wert der Zeile „Adresse für mpm\" in mpm auf der Seite „Inbetriebnahme\" beim IBKR-Konto als `MPM_IBKR_HOST` eintragen und speichern.\n",
+                "tags": [
+                    "finance",
+                    "trading"
+                ],
+                "mediaLinks": [
+                    "https://raw.githubusercontent.com/ernesta-jbl/mpm-kind-cloudron-versions/main/ibkr-gateway/icon.png"
+                ],
+                "icon": "file://icon.png",
+                "dockerImage": "container.cloudron.van-rickelen.com/ibkr-gateway:0.2.1"
+            },
+            "creationDate": "Wed, 25 Nov 2026 08:16:45 GMT",
+            "ts": "Wed, 25 Nov 2026 08:16:45 GMT",
+            "publishState": "published"
         }
     }
 }
